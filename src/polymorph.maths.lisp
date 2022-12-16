@@ -7,12 +7,17 @@
 
 ;; Equality
 (define-polymorphic-function = (object &rest objects) :overwrite t
-  :documentation "Return T if all of its arguments are , NIL otherwise.")
+  :documentation
+  "Return T if all of its arguments are equal, in a sense dictated by their type;
+ NIL otherwise.")
 
 (define-polymorphic-function /= (object &rest objects) :overwrite t
-  :documentation "Return T if all of its arguments are , NIL otherwise.")
+  :documentation
+  "Strange inequality function, behaves differently from CL:/=.
+What's its purpose?")
 
 (defpolymorph (= :inline t) ((first t)) (eql t)
+  "Extend CL:= equality to a single BOOLEAN argument."
   (declare (ignorable first))
   t)
 
