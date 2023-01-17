@@ -552,23 +552,29 @@ What's its purpose?")
 
 
 ;; Arithmetics
-(define-polymorphic-function + (&rest xs) :overwrite t)
+(define-polymorphic-function + (&rest xs) :overwrite t
+  :documentation "Arithmetic addition.")
 
 (defpolymorph + () (eql 0)
+  "When called without arguments, '+ returns 0."
   0)
 
-
 (defpolymorph + ((a t)) t
+  "When called with only one argument A of any type, return A."
   a)
 
 (defpolymorph + ((first number) (second number)) (values number &optional)
+  "Two arguments of type NUMBER are added with 'cl:+ ."
   (cl:+ first second))
 
 (defpolymorph + ((first character) (second character)) (values character &optional)
+  "Addition of CHARACTER type argiuments result in CHARACTER with the code as the sum if the arguments' codes."
   (code-char (cl:+ (char-code first) (char-code second))))
 
 (defpolymorph (+ :inline t) ((first t) (second t) (third t) &rest xs) t
+  "Reduce over multiple arguments."
   (cl:reduce #'+ xs :initial-value (+ (+ first second) third)))
+
 
 (defpolymorph-compiler-macro + (t t t &rest) (&whole form first second third &rest xs
                                                      &environment env)
@@ -579,6 +585,7 @@ What's its purpose?")
    (if (constantp (length xs) env)
        (gen+ xs `(+ (+ ,first ,second) ,third))
        form)))
+
 
 (define-polymorphic-function - (x &rest xs) :overwrite t)
 
